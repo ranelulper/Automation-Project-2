@@ -171,4 +171,36 @@ it('Test Case 2: Random Data Plugin Issue Creation', () => {
      cy.get('[data-testid="icon:task"]').should('be.visible');
    });
   });
-})
+
+  // JS Task 3
+  it.only('Should verify removing unnecessary spaces', () => {
+    const title = 'Hello world!';
+
+      cy.get('[data-testid="modal:issue-create"]').within(() => {        
+        cy.get('.ql-editor').type('TEST_DESCRIPTION');        
+        cy.get('input[name="title"]').type(title);
+        cy.get('button[type="submit"]').click();
+      });
+  
+      cy.get('[data-testid="modal:issue-create"]').should('not.exist');
+      cy.contains('Issue has been successfully created.').should('be.visible');
+      
+      cy.reload();
+      cy.contains('Issue has been successfully created.').should('not.exist');
+  
+      const spacesRemoved = title.trim();
+      cy.log(title);
+      cy.log(spacesRemoved);
+  
+      cy.get('[data-testid="list-issue"]')
+          .first()
+          .find('p')
+          .contains(spacesRemoved);
+
+      cy.get('[data-testid="list-issue"]')
+        .first()
+        .find('p')
+        .invoke('text')
+        .should('equal', spacesRemoved);
+    });
+});
